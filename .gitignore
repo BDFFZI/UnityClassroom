@@ -1,0 +1,9 @@
+/*/*
+/*.*
+!/Assets/*
+!/Packages/*
+!/ProjectSettings/*
+!/.gitignore
+!/.gitmodules
+!/LICENSE
+!/README.md
