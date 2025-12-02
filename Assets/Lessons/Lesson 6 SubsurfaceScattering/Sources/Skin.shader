@@ -1,4 +1,4 @@
-Shader "Hidden/PBR"
+Shader "Hidden/Skin"
 {
 	Properties
 	{
@@ -10,8 +10,16 @@ Shader "Hidden/PBR"
 		_Roughness("Roughness",Range(0,1)) = 0.5
 
 		_NormalMap("NormalMap",2D) = "bump"{}
+		_LowNormalMap("LowNormalMap",2D) = "bump"{}
+		_NormalScale("NormalScale",Float) = 1
+		_NormalWeight("NormalWeight",Color) = (1,1,1,1)
 		_OcclusionMap("OcclusionMap",2D) = "white"{}
 		_EmissiveMap("EmissiveMap",2D) = "black"{}
+
+		_AngleScatteringMap("AngleScatteringMap",2D) = "black"{}
+		_ShadowScatteringMap("ShadowScatteringMap",2D) = "black"{}
+		_CurvatureMap("CurvatureMap",2D) = "black"{}
+		_CurvatureOffset("CurvatureOffset",Range(-1,1)) = 0
 	}
 	SubShader
 	{
@@ -61,8 +69,16 @@ Shader "Hidden/PBR"
 			sampler2D _RoughnessMap;
 			float _Roughness;
 			sampler2D _NormalMap;
+			sampler2D _LowNormalMap;
+			float _NormalScale;
+			float4 _NormalWeight;
 			sampler2D _OcclusionMap;
 			sampler2D _EmissiveMap;
+
+			sampler2D _AngleScatteringMap;
+			sampler2D _ShadowScatteringMap;
+			sampler2D _CurvatureMap;
+			float _CurvatureOffset;
 
 
 			Fragment VertexPass(Vertex v)
@@ -90,9 +106,11 @@ Shader "Hidden/PBR"
 				float3 albedo = _Albedo.rgb * tex2D(_AlbedoMap, fragment.uv).rgb;
 				float metallic = _Metallic * tex2D(_MetallicMap, fragment.uv).r;
 				float smoothness = 1 - sqrt(_Roughness * tex2D(_RoughnessMap, fragment.uv).r);
-				float3 normal = mul(tangentToWorld, UnpackNormal(tex2D(_NormalMap, fragment.uv)));
+				float3 normal = mul(tangentToWorld, normalize(UnpackNormal(tex2D(_NormalMap, fragment.uv)) * float3(_NormalScale, _NormalScale, 1)));
+				float3 lowNormal = mul(tangentToWorld, normalize(UnpackNormal(tex2D(_LowNormalMap, fragment.uv)) * float3(_NormalScale, _NormalScale, 1)));
 				float occlusion = tex2D(_OcclusionMap, fragment.uv).r;
 				float3 emissive = tex2D(_EmissiveMap, fragment.uv).rgb;
+				float curvature = saturate(tex2D(_CurvatureMap, fragment.uv).r + _CurvatureOffset);
 				float3 positionWS = fragment.positionWS;
 				//其他可推导的物体表面属性
 				float perceptualRoughness = 1 - smoothness;
@@ -130,13 +148,30 @@ Shader "Hidden/PBR"
 						//光照物理：辐照度、辐射率
 						float3 irradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
 						float3 radiance = irradiance * saturate(dot(normal, light.direction));
-						//光照物理：双向反射分布函数
-						float3 diffuseTerm = 1;
+						//光照物理：镜射光
 						float3 ggx = roughness2 / pow(1.0001f + (roughness2 - 1) * pow(saturate(dot(h, normal)), 2), 2);
 						float3 geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
 						float3 specularTerm = ggx * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
+						//光学物理：散射光
+						//掠角次表面散射（该散射含辐射率系数）
+						float3 rNormal = normalize(lerp(normal, lowNormal, _NormalWeight.r));
+						float3 gNormal = normalize(lerp(normal, lowNormal, _NormalWeight.g));
+						float3 bNormal = normalize(lerp(normal, lowNormal, _NormalWeight.b));
+						float rHalfLambert = dot(rNormal, light.direction) * 0.5 + 0.5;
+						float rAngleScattering = tex2D(_AngleScatteringMap, float2(rHalfLambert, curvature)).r;
+						float gHalfLambert = dot(gNormal, light.direction) * 0.5 + 0.5;
+						float gAngleScattering = tex2D(_AngleScatteringMap, float2(gHalfLambert, curvature)).g;
+						float bHalfLambert = dot(bNormal, light.direction) * 0.5 + 0.5;
+						float bAngleScattering = tex2D(_AngleScatteringMap, float2(bHalfLambert, curvature)).b;
+						float3 angleScattering = float3(rAngleScattering, gAngleScattering, bAngleScattering);
+						//角度次表面散射（该散射含阴影衰减）
+						float3 shadowScattering = tex2D(_ShadowScatteringMap, float2(light.shadowAttenuation, curvature));
+						//散射辐射率
+						float3 scatteringIrradiance = light.color * light.distanceAttenuation * shadowScattering;
+						float3 scatteringRadiance = scatteringIrradiance * angleScattering;
+
 						//累加直接光照结果
-						finalColor += (diffuse * diffuseTerm + specular * specularTerm) * radiance;
+						finalColor += diffuse * scatteringRadiance + specular * specularTerm * radiance;
 					}
 				}
 				//计算间接光
