@@ -381,7 +381,7 @@ Transform:
   m_GameObject: {fileID: 752780752}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.2, y: 0, z: 0}
+  m_LocalPosition: {x: -0.6, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -403,7 +403,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1538138018040598912, guid: b8ad1130a61031543985872e3225de51, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.22833653
+      value: 0.0283365
       objectReference: {fileID: 0}
     - target: {fileID: 1538138018040598912, guid: b8ad1130a61031543985872e3225de51, type: 3}
       propertyPath: m_LocalPosition.y
@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4d76f733087744991913c9d19d5274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LensFlareData: {fileID: 11400000, guid: 29732d17fac54154bb3599b195cdeb65, type: 2}
+  m_LensFlareData: {fileID: 11400000, guid: 30aab2d0bc7ec204a9fb2dbcdca2a632, type: 2}
   intensity: 1
   maxAttenuationDistance: 100
   maxAttenuationScale: 100
@@ -913,7 +913,7 @@ Transform:
   m_GameObject: {fileID: 1725743074}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.2, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4d76f733087744991913c9d19d5274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LensFlareData: {fileID: 11400000, guid: 29732d17fac54154bb3599b195cdeb65, type: 2}
+  m_LensFlareData: {fileID: 11400000, guid: 30aab2d0bc7ec204a9fb2dbcdca2a632, type: 2}
   intensity: 1
   maxAttenuationDistance: 100
   maxAttenuationScale: 100

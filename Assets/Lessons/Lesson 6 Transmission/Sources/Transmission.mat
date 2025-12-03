@@ -131,6 +131,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Refringence: 0.7
     - _Roughness: 0.01
     - _Scattering: 0.9
     - _ScatteringPower: 2

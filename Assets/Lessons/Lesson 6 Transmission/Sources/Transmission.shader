@@ -76,7 +76,6 @@ Shader "Hidden/Transmission"
 			float _TransmitPower;
 			float _TransmitScale;
 
-
 			Fragment VertexPass(Vertex v)
 			{
 				Fragment fragment;
@@ -174,7 +173,7 @@ Shader "Hidden/Transmission"
 					//间接散射光
 					float3 diffuseRradiance = SampleSH(normal);
 					float3 bl = -normalize(-v + normal * thickness);
-					float3 transmitIrradiance = max(GlossyEnvironmentReflection(-bl, positionWS, saturate(perceptualRoughness + thickness), 1), SampleSH(-bl));
+					float3 transmitIrradiance = SampleSH(-bl);
 					float3 transmitRadiance = pow(transmitIrradiance, _TransmitPower) * _TransmitScale;
 					float3 scatteringColor = scatter * lerp(diffuseRradiance, transmitRadiance * (1 - thickness), transmission);
 					//累加间接光照结果
