@@ -11,10 +11,11 @@
 
 - battle-damaged-sci-fi-helmet-pbr：<https://sketchfab.com/3d-models/battle-damaged-sci-fi-helmet-pbr-b81008d513954189a063ff901f7abfe4>
 - bald-head：<https://sketchfab.com/3d-models/bald-head-2-de8237b14ed54d79be3a05d761ad9b9a>
+- stanford-dragon-pbr：<https://sketchfab.com/3d-models/stanford-dragon-pbr-5d610f842a4542ccb21613d41bbd7ea1>
 - groove：blender制作
 
 ### LUTs
 
-- angleScattering：<https://zhuanlan.zhihu.com/p/509057464>
-- shadowScattering：<https://zhuanlan.zhihu.com/p/509057464>
+- skinAngleScattering：<https://zhuanlan.zhihu.com/p/509057464>
+- skinShadowScattering：<https://zhuanlan.zhihu.com/p/509057464>
 - Kelemen and Szirmay-Kalos specular：<https://huangx916.github.io/2019/04/16/sss/>
