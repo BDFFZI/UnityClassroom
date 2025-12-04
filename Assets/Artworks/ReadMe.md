@@ -13,6 +13,7 @@
 - bald-head：<https://sketchfab.com/3d-models/bald-head-2-de8237b14ed54d79be3a05d761ad9b9a>
 - stanford-dragon-pbr：<https://sketchfab.com/3d-models/stanford-dragon-pbr-5d610f842a4542ccb21613d41bbd7ea1>
 - groove：blender制作
+- dish：blender制作
 
 ### LUTs
 

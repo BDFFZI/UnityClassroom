@@ -19,7 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _EmissiveMap
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -142,7 +142,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _Thickness: 0.8
+    - _Thickness: 0.6
     - _Transmission: 0.8
     - _TransmitPower: 2
     - _TransmitScale: 1

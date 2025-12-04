@@ -1,4 +1,4 @@
-Shader "Hidden/Transmission"
+Shader "Hidden/Anisotropy"
 {
 	Properties
 	{
@@ -12,12 +12,11 @@ Shader "Hidden/Transmission"
 		_NormalMap("NormalMap",2D) = "bump"{}
 		_OcclusionMap("OcclusionMap",2D) = "white"{}
 		_EmissiveMap("EmissiveMap",2D) = "black"{}
-		_Scattering("Scattering",Range(0,1)) = 0
-		_Transmission("Transmission",Range(0,1)) = 0
-		_ThicknessMap("ThicknessMap",2D) = "white"{}
-		_Thickness("Thickness",Range(0,1)) = 0
-		_TransmitPower("TransmitPower",Float) = 1
-		_TransmitScale("TransmitScale",Float) = 1
+
+		_Brightness("Brightness",Float) = 1
+		_DisturbanceMap("DisturbanceMap",2D) = "white"{}
+		_Disturbance("Disturbance",Range(0,2)) = 1
+		_DisturbanceOffset("DisturbanceOffset",Float) = 0
 	}
 	SubShader
 	{
@@ -69,12 +68,12 @@ Shader "Hidden/Transmission"
 			sampler2D _NormalMap;
 			sampler2D _OcclusionMap;
 			sampler2D _EmissiveMap;
-			float _Scattering;
-			float _Transmission;
-			sampler2D _ThicknessMap;
-			float _Thickness;
-			float _TransmitPower;
-			float _TransmitScale;
+
+			float _Brightness;
+			sampler2D _DisturbanceMap;
+			float4 _DisturbanceMap_ST;
+			float _Disturbance;
+			float _DisturbanceOffset;
 
 			Fragment VertexPass(Vertex v)
 			{
@@ -102,11 +101,10 @@ Shader "Hidden/Transmission"
 				float metallic = _Metallic * tex2D(_MetallicMap, fragment.uv).r;
 				float smoothness = 1 - sqrt(_Roughness * tex2D(_RoughnessMap, fragment.uv).r);
 				float3 normal = mul(tangentToWorld, UnpackNormal(tex2D(_NormalMap, fragment.uv)));
+				float3 bitangent = tangentToWorld._m01_m11_m21;
 				float occlusion = tex2D(_OcclusionMap, fragment.uv).r;
 				float3 emissive = tex2D(_EmissiveMap, fragment.uv).rgb;
-				float scattering = _Scattering;
-				float transmission = _Transmission;
-				float thickness = tex2D(_ThicknessMap, fragment.uv).r * _Thickness;
+				float disturbance = (tex2D(_DisturbanceMap, fragment.uv * _DisturbanceMap_ST.xy).r - 0.5) * _Disturbance + _DisturbanceOffset;
 				float3 positionWS = fragment.positionWS;
 				//其他可推导的物体表面属性
 				float perceptualRoughness = 1 - smoothness;
@@ -135,54 +133,38 @@ Shader "Hidden/Transmission"
 					for (int i = 0; i < GetAdditionalLightsCount(); ++i)
 						lights[i + 1] = GetAdditionalLight(i, positionWS, 1);
 					//遍历计算光照
-					for (int i = 1; i < lightCount; ++i)
+					for (int i = 0; i < lightCount; ++i)
 					{
 						//提取灯光信息
 						Light light = lights[i];
 						float3 l = light.direction;
 						float3 h = normalize(v + l);
-						//镜射光
-						float3 specularIrradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
-						float3 specularRadiance = specularIrradiance * saturate(dot(normal, light.direction));
-						float3 ggx = roughness2 / pow(1.0001f + (roughness2 - 1) * pow(saturate(dot(h, normal)), 2), 2);
+						//光照物理：辐照度、辐射率
+						float3 irradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
+						float3 radiance = irradiance * saturate(dot(normal, light.direction));
+						//光照物理：双向反射分布函数
+						float3 diffuseTerm = 1;
+						float3 b = normalize(bitangent + normal * disturbance);
+						float kk = pow(sqrt(1 - pow(dot(h, b), 2)), smoothness * 128) * _Brightness;
 						float3 geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
-						float3 specularTerm = ggx * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
-						float3 specularColor = specular * specularTerm * specularRadiance;
-						//散射光
-						//散射辐照度
-						float3 scatteringIrradiance = light.color * light.distanceAttenuation * lerp(light.shadowAttenuation, 1 - thickness, scattering);
-						//求解漫透射系数（漫反射曲线重映射）
-						float lambertTermCurve = dot(normal, light.direction); //标准兰伯特散射强度曲线
-						float scatterTermCurve = (2 * pow(dot(normal, light.direction), 2) - 1) * 0.5 + 0.5; //最大透射时散射强度曲线
-						float diffuseTerm = saturate(lerp(lambertTermCurve, scatterTermCurve, scattering));
-						//求解镜透射
-						float3 bl = -normalize(l + normal * thickness);
-						float transmitTerm = pow(dot(bl, v) * 0.5 + 0.5, _TransmitPower) * _TransmitScale;
-						//计算合并后的散射光
-						float scatteringRadianceTerm = lerp(diffuseTerm, transmitTerm, transmission);
-						float3 scatteringRadiance = scatteringIrradiance * scatteringRadianceTerm;
-						float3 scatteringColor = diffuse * scatteringRadiance;
-
+						float3 specularTerm = kk * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
 						//累加直接光照结果
-						finalColor += specularColor + scatteringColor;
+						finalColor += (diffuse * diffuseTerm + specular * specularTerm) * radiance;
 					}
 				}
 				//计算间接光
 				{
-					//间接镜射光
+					//间接光辐射率
+					float3 diffuseRadiance = SampleSH(normal);
 					float mipLevel = perceptualRoughness * (1.7 - 0.7 * perceptualRoughness) * UNITY_SPECCUBE_LOD_STEPS;
 					float4 encodeSpecularRadiance = unity_SpecCube0.SampleLevel(samplerunity_SpecCube0, reflect(-v, normal), mipLevel);
 					float3 specularRadiance = DecodeHDREnvironment(encodeSpecularRadiance, unity_SpecCube0_HDR);
+					//双向反射系数
+					float3 diffuseTerm = 1;
 					float3 specularTerm = 1 / (1 + roughness2); //几何遮蔽
-					float3 specularColor = specular * specularTerm * specularRadiance;
-					//间接散射光
-					float3 diffuseRradiance = lerp(SampleSH(normal) * occlusion, SampleSH(-normal) * (1 - thickness), scattering);
-					float3 bl = -normalize(-v + normal * thickness);
-					float3 transmitIrradiance = SampleSH(-bl);
-					float3 transmitRadiance = pow(transmitIrradiance, _TransmitPower) * _TransmitScale * (1 - thickness);
-					float3 scatteringColor = diffuse * lerp(diffuseRradiance, transmitRadiance, transmission);
 					//累加间接光照结果
-					finalColor += scatteringColor + specularColor * occlusion;
+					float3 indirectColor = diffuse * diffuseTerm * diffuseRadiance + specular * specularTerm * specularRadiance;
+					finalColor += indirectColor * occlusion;
 				}
 				//计算自发光
 				finalColor += emissive;
