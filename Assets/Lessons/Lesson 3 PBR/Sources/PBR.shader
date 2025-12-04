@@ -131,10 +131,10 @@ Shader "Hidden/PBR"
 						float3 irradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
 						float3 radiance = irradiance * saturate(dot(normal, light.direction));
 						//光照物理：双向反射分布函数
-						float3 diffuseTerm = 1;
-						float3 ggx = roughness2 / pow(1.0001f + (roughness2 - 1) * pow(saturate(dot(h, normal)), 2), 2);
-						float3 geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
-						float3 specularTerm = ggx * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
+						float diffuseTerm = 1;
+						float ggx = roughness2 / pow(1.0001f + (roughness2 - 1) * pow(saturate(dot(h, normal)), 2), 2);
+						float geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
+						float specularTerm = ggx * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
 						//累加直接光照结果
 						finalColor += (diffuse * diffuseTerm + specular * specularTerm) * radiance;
 					}

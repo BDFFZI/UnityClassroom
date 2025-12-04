@@ -135,7 +135,7 @@ Shader "Hidden/Transmission"
 					for (int i = 0; i < GetAdditionalLightsCount(); ++i)
 						lights[i + 1] = GetAdditionalLight(i, positionWS, 1);
 					//遍历计算光照
-					for (int i = 1; i < lightCount; ++i)
+					for (int i = 0; i < lightCount; ++i)
 					{
 						//提取灯光信息
 						Light light = lights[i];

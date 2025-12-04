@@ -12,8 +12,7 @@
 - battle-damaged-sci-fi-helmet-pbr：<https://sketchfab.com/3d-models/battle-damaged-sci-fi-helmet-pbr-b81008d513954189a063ff901f7abfe4>
 - bald-head：<https://sketchfab.com/3d-models/bald-head-2-de8237b14ed54d79be3a05d761ad9b9a>
 - stanford-dragon-pbr：<https://sketchfab.com/3d-models/stanford-dragon-pbr-5d610f842a4542ccb21613d41bbd7ea1>
-- groove：blender制作
-- dish：blender制作
+- female-hairs：<https://sketchfab.com/3d-models/female-hairs-0a391b6508a241f4b0b399f403ee4602>
 
 ### LUTs
 
