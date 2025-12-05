@@ -126,6 +126,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _IndirectTransmitPower: 3
+    - _IndirectTransmitScale: 5
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -144,8 +146,8 @@ Material:
     - _Surface: 0
     - _Thickness: 0.6
     - _Transmission: 0.8
-    - _TransmitPower: 2
-    - _TransmitScale: 1
+    - _TransmitPower: 4
+    - _TransmitScale: 1.5
     - _Transparency: 0.704
     - _WorkflowMode: 1
     - _ZWrite: 1

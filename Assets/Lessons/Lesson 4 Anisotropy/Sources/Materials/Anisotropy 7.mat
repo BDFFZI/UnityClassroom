@@ -66,8 +66,8 @@ Material:
     - _DisturbanceIntensity2: 0.8
     - _DisturbanceOffset: 0.1
     - _DisturbanceOffset2: 0.4
-    - _Metallic: 0.5
-    - _Roughness: 0.15
+    - _Metallic: 0.6
+    - _Roughness: 0.12
     m_Colors:
     - _Albedo: {r: 1.6245048, g: 1.2396289, b: 1.0022888, a: 1}
     - _DisturbanceColor: {r: 0, g: 0, b: 0, a: 0.8}

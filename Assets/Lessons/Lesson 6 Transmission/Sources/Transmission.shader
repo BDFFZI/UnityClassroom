@@ -18,6 +18,8 @@ Shader "Hidden/Transmission"
 		_Thickness("Thickness",Range(0,1)) = 0
 		_TransmitPower("TransmitPower",Float) = 1
 		_TransmitScale("TransmitScale",Float) = 1
+		_IndirectTransmitPower("IndirectTransmitPower",Float) = 1
+		_IndirectTransmitScale("IndirectTransmitScale",Float) = 1
 	}
 	SubShader
 	{
@@ -75,6 +77,8 @@ Shader "Hidden/Transmission"
 			float _Thickness;
 			float _TransmitPower;
 			float _TransmitScale;
+			float _IndirectTransmitPower;
+			float _IndirectTransmitScale;
 
 			Fragment VertexPass(Vertex v)
 			{
@@ -178,8 +182,8 @@ Shader "Hidden/Transmission"
 					//间接散射光
 					float3 diffuseRradiance = lerp(SampleSH(normal) * occlusion, SampleSH(-normal) * (1 - thickness), scattering);
 					float3 bl = -normalize(-v + normal * thickness);
-					float3 transmitIrradiance = SampleSH(-bl);
-					float3 transmitRadiance = pow(transmitIrradiance, _TransmitPower) * _TransmitScale * (1 - thickness);
+					float3 transmitIrradiance = pow(SampleSH(-bl), _IndirectTransmitPower) * _IndirectTransmitScale;
+					float3 transmitRadiance = transmitIrradiance * (1 - thickness);
 					float3 scatteringColor = diffuse * lerp(diffuseRradiance, transmitRadiance, transmission);
 					//累加间接光照结果
 					finalColor += scatteringColor + specularColor * occlusion;

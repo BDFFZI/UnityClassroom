@@ -1,4 +1,4 @@
-Shader "Hidden/PBR"
+Shader "Hidden/ToonRendering"
 {
 	Properties
 	{
@@ -12,6 +12,18 @@ Shader "Hidden/PBR"
 		_NormalMap("NormalMap",2D) = "bump"{}
 		_OcclusionMap("OcclusionMap",2D) = "white"{}
 		_EmissiveMap("EmissiveMap",2D) = "black"{}
+
+		_Toonmapping("Toonmapping",2D) = "white"{}
+		_ToonIntensity("ToonIntensity",Range(0,1)) = 0
+		_ToonShadow("ToonShadow",Color) = (0,0,0,0)
+		_TonnShadowShift("TonnShadowShift",Range(-1,1)) = 0
+		_ToonIntensity2("ToonIntensity2",Range(0,1)) = 0
+		_ToonShadow2("ToonShadow2",Color) = (0,0,0,0)
+		_TonnShadowShift2("TonnShadowShift2",Range(-1,1)) = 0
+		_ToonSpecular("ToonSpecular",Range(0,1)) = 0
+		_ToonSpecularShift("ToonSpecularShift",Range(-1,1)) = 0
+		_OutlineWidth("OutlineWidth",Range(0,0.01)) = 0
+		_OutlineColor("OutlineColor",Color) = (0,0,0,1)
 	}
 	SubShader
 	{
@@ -35,6 +47,7 @@ Shader "Hidden/PBR"
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Random.hlsl"
 
 			struct Vertex
 			{
@@ -64,6 +77,15 @@ Shader "Hidden/PBR"
 			sampler2D _OcclusionMap;
 			sampler2D _EmissiveMap;
 
+			sampler2D _Toonmapping;
+			float _ToonIntensity;
+			float4 _ToonShadow;
+			float _TonnShadowShift;
+			float _ToonIntensity2;
+			float4 _ToonShadow2;
+			float _TonnShadowShift2;
+			float _ToonSpecular;
+			float _ToonSpecularShift;
 
 			Fragment VertexPass(Vertex v)
 			{
@@ -127,16 +149,27 @@ Shader "Hidden/PBR"
 						Light light = lights[i];
 						float3 l = light.direction;
 						float3 h = normalize(v + l);
-						//光照物理：辐照度、辐射率
-						float3 irradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
-						float3 radiance = irradiance * saturate(dot(normal, light.direction));
-						//光照物理：双向反射分布函数
-						float diffuseTerm = 1;
-						float ggx = roughness2 / pow(1.0001 + (roughness2 - 1) * pow(saturate(dot(h, normal)), 2), 2.1);
+						//漫射光
+						float3 diffuseIrradiance = light.color * light.distanceAttenuation;
+						float lightAttenuation = saturate(dot(normal, light.direction) * 0.5 + 0.5) * light.shadowAttenuation;
+						float3 diffuseRadiance = diffuseIrradiance;
+						float toonmapping = tex2D(_Toonmapping, float2(lightAttenuation + _TonnShadowShift, _ToonIntensity)).r;
+						diffuseRadiance *= lerp(1, _ToonShadow.rgb, toonmapping * _ToonShadow.a);
+						float toonmapping2 = tex2D(_Toonmapping, float2(lightAttenuation + _TonnShadowShift2, _ToonIntensity2)).r;
+						diffuseRadiance *= lerp(1, _ToonShadow2.rgb, toonmapping2 * _ToonShadow2.a);
+						float3 diffuseColor = diffuse * diffuseRadiance;
+						//镜射光
+						float3 specularIrradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
+						float3 specularRadiance = specularIrradiance * saturate(dot(normal, light.direction));
+						float blinn1 = pow(saturate(dot(h, normal)), max(2 / roughness2 - 2, 0.0001));
+						float blinn1Toonmapping = 1 - tex2D(_Toonmapping, float2(blinn1 + _ToonSpecularShift, _ToonSpecular)).r;
+						float blinn2 = blinn1Toonmapping * (1 / roughness2);
 						float geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
-						float specularTerm = ggx * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
+						float specularTerm = blinn2 * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
+						float specularColor = specular * specularTerm * specularRadiance;
+
 						//累加直接光照结果
-						finalColor += (diffuse * diffuseTerm + specular * specularTerm) * radiance;
+						finalColor += diffuseColor + specularColor;
 					}
 				}
 				//计算间接光
@@ -157,6 +190,58 @@ Shader "Hidden/PBR"
 				finalColor += emissive;
 
 				return float4(finalColor, 1);
+			}
+			ENDHLSL
+		}
+
+		Pass
+		{
+			Tags
+			{
+				"LightMode" = "UniversalForwardOnly"
+			}
+				
+			Cull Front
+			
+			HLSLPROGRAM
+			#pragma vertex VertexPass
+			#pragma fragment FragmentPass
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+			struct Vertex
+			{
+				float3 positionOS:POSITION;
+				float3 normalOS:NORMAL;
+				float2 uv:TEXCOORD0;
+			};
+
+			struct Fragment
+			{
+				float4 positionCS_SV:SV_POSITION;
+				float2 uv:TEXCOORD0;
+			};
+
+			sampler2D _AlbedoMap;
+			float4 _Albedo;
+			float _OutlineWidth;
+			float4 _OutlineColor;
+
+			Fragment VertexPass(Vertex vertex)
+			{
+				float3 positionOS = vertex.positionOS;
+				positionOS += vertex.normalOS * _OutlineWidth;
+
+				Fragment fragment;
+				fragment.positionCS_SV = TransformObjectToHClip(positionOS);
+				fragment.uv = vertex.uv;
+				return fragment;
+			}
+
+			float3 FragmentPass(Fragment fragment) : SV_TARGET
+			{
+				float4 albedo = tex2D(_AlbedoMap, fragment.uv) * _Albedo;
+				float3 color = albedo.rgb * albedo.rgb * _OutlineColor.rgb;
+				return float4(color, 1);
 			}
 			ENDHLSL
 		}

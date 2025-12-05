@@ -66,10 +66,10 @@ Material:
     - _DisturbanceIntensity2: 0.8
     - _DisturbanceOffset: 0.1
     - _DisturbanceOffset2: 0.4
-    - _Metallic: 0.5
-    - _Roughness: 0.15
+    - _Metallic: 0.6
+    - _Roughness: 0.12
     m_Colors:
-    - _Albedo: {r: 1.4896402, g: 1.0115414, b: 0.7167136, a: 1}
+    - _Albedo: {r: 1.9700245, g: 1.0138288, b: 0.41816565, a: 1}
     - _DisturbanceColor: {r: 0, g: 0, b: 0, a: 0.8}
     - _DisturbanceColor2: {r: 0, g: 0, b: 0, a: 0.2}
   m_BuildTextureStacks: []

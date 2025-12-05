@@ -7,12 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Anisotropy 8
-  m_Shader: {fileID: 4800000, guid: fc77ab4eff2d6804ab69a274bf79beba, type: 3}
+  m_Name: ToonRendering
+  m_Shader: {fileID: 4800000, guid: d5aa0f0e727c1664fa82e6e64915ce32, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ANISOTROPYMODE_BITANGENT
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -25,16 +24,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AlbedoMap:
-        m_Texture: {fileID: 2800000, guid: 034ed29f664ed0740a54c7bfc1d8c64f, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _AnisotropyMap:
-        m_Texture: {fileID: 8600000, guid: 16e16fa3166bd15438560ce2705eb059, type: 2}
-        m_Scale: {x: 3, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DisturbanceMap:
-        m_Texture: {fileID: 8600000, guid: 16e16fa3166bd15438560ce2705eb059, type: 2}
-        m_Scale: {x: 3, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveMap:
         m_Texture: {fileID: 0}
@@ -56,20 +47,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Toonmapping:
+        m_Texture: {fileID: 8600000, guid: c4b8e8c9cd0b71e4dac077bf996acb14, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlbedoDisturbance: 0.5
-    - _AnisotropyMode: 1
-    - _Brightness: 10
-    - _Disturbance: 0.64
-    - _DisturbanceIntensity: 1
-    - _DisturbanceIntensity2: 0.8
-    - _DisturbanceOffset: 0.1
-    - _DisturbanceOffset2: 0.4
-    - _Metallic: 0.6
-    - _Roughness: 0.12
+    - _Metallic: 0
+    - _OutlineWidth: 0.01
+    - _Roughness: 0.05
+    - _TonnShadowShift: -0.223
+    - _TonnShadowShift2: -0.054
+    - _ToonIntensity: 0.95
+    - _ToonIntensity2: 0.95
+    - _ToonSpecular: 0.9
+    - _ToonSpecularShift: 0.3
     m_Colors:
-    - _Albedo: {r: 1.6245048, g: 1.2396289, b: 1.0022888, a: 1}
-    - _DisturbanceColor: {r: 0, g: 0, b: 0, a: 0.8}
-    - _DisturbanceColor2: {r: 0, g: 0, b: 0, a: 0.2}
+    - _Albedo: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.77254903}
+    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

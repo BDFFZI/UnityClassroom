@@ -58,6 +58,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlbedoDisturbance: 0
     - _AnisotropyMode: 0
     - _Brightness: 10
     - _Disturbance: 0.64
@@ -65,8 +66,8 @@ Material:
     - _DisturbanceIntensity2: 0.5
     - _DisturbanceOffset: 0
     - _DisturbanceOffset2: 0
-    - _Metallic: 0.7
-    - _Roughness: 0.15
+    - _Metallic: 0.6
+    - _Roughness: 0.12
     m_Colors:
     - _Albedo: {r: 0.78113204, g: 0.78113204, b: 0.78113204, a: 1}
     - _DisturbanceColor: {r: 0, g: 0, b: 0, a: 0.8}

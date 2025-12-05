@@ -273,7 +273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4738061413006613751, guid: b8ad1130a61031543985872e3225de51, type: 3}
       propertyPath: m_Intensity
-      value: 1.3
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 6054107969808977078, guid: b8ad1130a61031543985872e3225de51, type: 3}
       propertyPath: m_LocalRotation.w
