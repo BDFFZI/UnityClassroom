@@ -47,24 +47,31 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SmoothnessMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Toonmapping:
         m_Texture: {fileID: 8600000, guid: c4b8e8c9cd0b71e4dac077bf996acb14, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0
+    - _Metallic: 0.2
     - _OutlineWidth: 0.01
     - _Roughness: 0.05
+    - _Smoothness: 0.8
     - _TonnShadowShift: -0.223
     - _TonnShadowShift2: -0.054
     - _ToonIntensity: 0.95
     - _ToonIntensity2: 0.95
+    - _ToonShadowShift: -0.2
+    - _ToonShadowShift2: -0.05
     - _ToonSpecular: 0.9
-    - _ToonSpecularShift: 0.3
+    - _ToonSpecularShift: 0.31
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.77254903}
-    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 1}
+    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.5019608}
+    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0.8}
   m_BuildTextureStacks: []

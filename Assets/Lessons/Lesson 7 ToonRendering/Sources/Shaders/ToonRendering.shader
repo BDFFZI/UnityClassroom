@@ -16,12 +16,10 @@ Shader "Hidden/ToonRendering"
 		_Toonmapping("Toonmapping",2D) = "white"{}
 		_ToonIntensity("ToonIntensity",Range(0,1)) = 0
 		_ToonShadow("ToonShadow",Color) = (0,0,0,0)
-		_TonnShadowShift("TonnShadowShift",Range(-1,1)) = 0
+		_ToonShadowShift("ToonShadowShift",Range(-1,1)) = 0
 		_ToonIntensity2("ToonIntensity2",Range(0,1)) = 0
 		_ToonShadow2("ToonShadow2",Color) = (0,0,0,0)
-		_TonnShadowShift2("TonnShadowShift2",Range(-1,1)) = 0
-		_ToonSpecular("ToonSpecular",Range(0,1)) = 0
-		_ToonSpecularShift("ToonSpecularShift",Range(-1,1)) = 0
+		_ToonShadowShift2("ToonShadowShift2",Range(-1,1)) = 0
 		_OutlineWidth("OutlineWidth",Range(0,0.01)) = 0
 		_OutlineColor("OutlineColor",Color) = (0,0,0,1)
 	}
@@ -80,12 +78,10 @@ Shader "Hidden/ToonRendering"
 			sampler2D _Toonmapping;
 			float _ToonIntensity;
 			float4 _ToonShadow;
-			float _TonnShadowShift;
+			float _ToonShadowShift;
 			float _ToonIntensity2;
 			float4 _ToonShadow2;
-			float _TonnShadowShift2;
-			float _ToonSpecular;
-			float _ToonSpecularShift;
+			float _ToonShadowShift2;
 
 			Fragment VertexPass(Vertex v)
 			{
@@ -120,7 +116,7 @@ Shader "Hidden/ToonRendering"
 				float perceptualRoughness = 1 - smoothness;
 				float roughness = max(HALF_MIN_SQRT, pow(perceptualRoughness, 2));
 				float roughness2 = roughness * roughness;
-				float dielectricSpec = 0.04;
+				float dielectricSpec = 0;
 				float reflectivity = lerp(dielectricSpec, 1, metallic);
 				float grazingTerm = saturate(reflectivity + smoothness);
 				//相机信息
@@ -153,19 +149,17 @@ Shader "Hidden/ToonRendering"
 						float3 diffuseIrradiance = light.color * light.distanceAttenuation;
 						float lightAttenuation = saturate(dot(normal, light.direction) * 0.5 + 0.5) * light.shadowAttenuation;
 						float3 diffuseRadiance = diffuseIrradiance;
-						float toonmapping = tex2D(_Toonmapping, float2(lightAttenuation + _TonnShadowShift, _ToonIntensity)).r;
+						float toonmapping = tex2D(_Toonmapping, float2(lightAttenuation + _ToonShadowShift, _ToonIntensity)).r;
 						diffuseRadiance *= lerp(1, _ToonShadow.rgb, toonmapping * _ToonShadow.a);
-						float toonmapping2 = tex2D(_Toonmapping, float2(lightAttenuation + _TonnShadowShift2, _ToonIntensity2)).r;
+						float toonmapping2 = tex2D(_Toonmapping, float2(lightAttenuation + _ToonShadowShift2, _ToonIntensity2)).r;
 						diffuseRadiance *= lerp(1, _ToonShadow2.rgb, toonmapping2 * _ToonShadow2.a);
 						float3 diffuseColor = diffuse * diffuseRadiance;
 						//镜射光
 						float3 specularIrradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
 						float3 specularRadiance = specularIrradiance * saturate(dot(normal, light.direction));
-						float blinn1 = pow(saturate(dot(h, normal)), max(2 / roughness2 - 2, 0.0001));
-						float blinn1Toonmapping = 1 - tex2D(_Toonmapping, float2(blinn1 + _ToonSpecularShift, _ToonSpecular)).r;
-						float blinn2 = blinn1Toonmapping * (1 / roughness2);
+						float blinn = pow(saturate(dot(h, normal)), max(2 / roughness2 - 2, 0.0001)) * (1 / roughness2);
 						float geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
-						float specularTerm = blinn2 * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
+						float specularTerm = blinn * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
 						float specularColor = specular * specularTerm * specularRadiance;
 
 						//累加直接光照结果

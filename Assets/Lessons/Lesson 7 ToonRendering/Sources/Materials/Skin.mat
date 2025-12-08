@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Eye
+  m_Name: Skin
   m_Shader: {fileID: 4800000, guid: d5aa0f0e727c1664fa82e6e64915ce32, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -19,12 +19,12 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _ToonSpecularShift
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _AlbedoMap:
-        m_Texture: {fileID: 2800000, guid: 4ebea0c224e7eb947a5b6db7abc7bafe, type: 3}
+        m_Texture: {fileID: 2800000, guid: cc24ed0d7a1747143b96c3b5d27f9287, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveMap:
@@ -32,15 +32,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f3a1e4f4a0e60944597eb95716fa7f1b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7bf5192fed41faa4e9342a4dff28df06, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 78f320081f31e4f48bb3015769772fe6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9d146306e8afd144887b3a8dd21a0288, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Toonmapping:
@@ -57,19 +57,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0
+    - _Metallic: 1
     - _OutlineWidth: 0.002
     - _Roughness: 0.05
-    - _Smoothness: 0
+    - _Smoothness: 1
     - _TonnShadowShift: -0.223
     - _TonnShadowShift2: -0.054
-    - _ToonIntensity: 0.95
+    - _ToonIntensity: 0.7
     - _ToonIntensity2: 0.95
+    - _ToonShadowShift: 0.1
+    - _ToonShadowShift2: -0.05
     - _ToonSpecular: 0.9
-    - _ToonSpecularShift: 0.3
+    - _ToonSpecularShift: -0.4
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.77254903}
-    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 1}
+    - _ToonShadow: {r: 0.9547169, g: 0.5262141, b: 0.46655032, a: 0.60784316}
+    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

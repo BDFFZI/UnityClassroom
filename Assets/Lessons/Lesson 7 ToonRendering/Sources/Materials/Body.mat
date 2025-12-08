@@ -65,11 +65,13 @@ Material:
     - _TonnShadowShift2: -0.054
     - _ToonIntensity: 0.95
     - _ToonIntensity2: 0.95
-    - _ToonSpecular: 0.9
-    - _ToonSpecularShift: 0.3
+    - _ToonShadowShift: -0.25
+    - _ToonShadowShift2: -0.05
+    - _ToonSpecular: 0
+    - _ToonSpecularShift: 0
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.77254903}
-    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 1}
+    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.44313726}
+    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_BuildTextureStacks: []

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hair
+  m_Name: Face
   m_Shader: {fileID: 4800000, guid: d5aa0f0e727c1664fa82e6e64915ce32, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AlbedoMap:
-        m_Texture: {fileID: 2800000, guid: 7f298bbd7ba13544d968263d87bf7ab2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 76a34609fc2ec884a8ef9a4d5dbf8085, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveMap:
@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
-        m_Texture: {fileID: 2800000, guid: 603ee1bea7ee7e64a8ab30b8bc937233, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
-        m_Texture: {fileID: 2800000, guid: 603ee1bea7ee7e64a8ab30b8bc937233, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Toonmapping:
@@ -57,19 +57,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 1
+    - _Metallic: 0
     - _OutlineWidth: 0.002
     - _Roughness: 0.05
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _TonnShadowShift: -0.223
     - _TonnShadowShift2: -0.054
-    - _ToonIntensity: 0.95
+    - _ToonIntensity: 0.7
     - _ToonIntensity2: 0.95
+    - _ToonShadowShift: 0.4
+    - _ToonShadowShift2: -0.05
     - _ToonSpecular: 0.9
-    - _ToonSpecularShift: 0.3
+    - _ToonSpecularShift: 0.4
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.77254903}
-    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 1}
+    - _ToonShadow: {r: 0.9547169, g: 0.5262141, b: 0.46655032, a: 0.60784316}
+    - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
