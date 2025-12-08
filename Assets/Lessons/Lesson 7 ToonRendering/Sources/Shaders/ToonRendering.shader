@@ -6,8 +6,8 @@ Shader "Hidden/ToonRendering"
 		_Albedo ("Albedo", Color) = (1,1,1,1)
 		_MetallicMap("MetallicMap",2D) = "white"{}
 		_Metallic("Metallic",Range(0,1)) = 0
-		_RoughnessMap("RoughnessMap",2D) = "white"{}
-		_Roughness("Roughness",Range(0,1)) = 0.5
+		_SmoothnessMap("SmoothnessMap",2D) = "white"{}
+		_Smoothness("Smoothness",Range(0,1)) = 0.5
 
 		_NormalMap("NormalMap",2D) = "bump"{}
 		_OcclusionMap("OcclusionMap",2D) = "white"{}
@@ -71,8 +71,8 @@ Shader "Hidden/ToonRendering"
 			float4 _Albedo;
 			sampler2D _MetallicMap;
 			float _Metallic;
-			sampler2D _RoughnessMap;
-			float _Roughness;
+			sampler2D _SmoothnessMap;
+			float _Smoothness;
 			sampler2D _NormalMap;
 			sampler2D _OcclusionMap;
 			sampler2D _EmissiveMap;
@@ -111,7 +111,7 @@ Shader "Hidden/ToonRendering"
 				//物体表面属性
 				float3 albedo = _Albedo.rgb * tex2D(_AlbedoMap, fragment.uv).rgb;
 				float metallic = _Metallic * tex2D(_MetallicMap, fragment.uv).r;
-				float smoothness = 1 - sqrt(_Roughness * tex2D(_RoughnessMap, fragment.uv).r);
+				float smoothness = _Smoothness * tex2D(_SmoothnessMap, fragment.uv).r;
 				float3 normal = mul(tangentToWorld, UnpackNormal(tex2D(_NormalMap, fragment.uv)));
 				float occlusion = tex2D(_OcclusionMap, fragment.uv).r;
 				float3 emissive = tex2D(_EmissiveMap, fragment.uv).rgb;
@@ -200,9 +200,11 @@ Shader "Hidden/ToonRendering"
 			{
 				"LightMode" = "UniversalForwardOnly"
 			}
-				
+
 			Cull Front
-			
+			//			ZWrite Off
+			//			Blend SrcAlpha OneMinusSrcAlpha
+
 			HLSLPROGRAM
 			#pragma vertex VertexPass
 			#pragma fragment FragmentPass
@@ -228,11 +230,12 @@ Shader "Hidden/ToonRendering"
 
 			Fragment VertexPass(Vertex vertex)
 			{
-				float3 positionOS = vertex.positionOS;
-				positionOS += vertex.normalOS * _OutlineWidth;
+				float3 positionWS = TransformObjectToWorld(vertex.positionOS);
+				float3 normalWS = TransformObjectToWorldNormal(vertex.normalOS);
+				positionWS += normalWS * _OutlineWidth;
 
 				Fragment fragment;
-				fragment.positionCS_SV = TransformObjectToHClip(positionOS);
+				fragment.positionCS_SV = TransformWorldToHClip(positionWS);
 				fragment.uv = vertex.uv;
 				return fragment;
 			}
@@ -241,7 +244,7 @@ Shader "Hidden/ToonRendering"
 			{
 				float4 albedo = tex2D(_AlbedoMap, fragment.uv) * _Albedo;
 				float3 color = albedo.rgb * albedo.rgb * _OutlineColor.rgb;
-				return float4(color, 1);
+				return float4(color, albedo.a * _OutlineColor.a);
 			}
 			ENDHLSL
 		}

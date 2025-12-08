@@ -15,7 +15,7 @@
 - bald-head：<https://sketchfab.com/3d-models/bald-head-2-de8237b14ed54d79be3a05d761ad9b9a>
 - stanford-dragon-pbr：<https://sketchfab.com/3d-models/stanford-dragon-pbr-5d610f842a4542ccb21613d41bbd7ea1>
 - female-hairs：<https://sketchfab.com/3d-models/female-hairs-0a391b6508a241f4b0b399f403ee4602>
-- ：<https://www.aplaybox.com/details/model/BHT8uTY9U4HV>
+- Reisalin (Ryza) Stout：<https://www.aplaybox.com/details/model/2UJTtr6DKduo>
 
 ### LUTs
 
