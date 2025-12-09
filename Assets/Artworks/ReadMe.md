@@ -17,6 +17,10 @@
 - female-hairs：<https://sketchfab.com/3d-models/female-hairs-0a391b6508a241f4b0b399f403ee4602>
 - Reisalin (Ryza) Stout：<https://www.aplaybox.com/details/model/2UJTtr6DKduo>
 
+### Animations
+
+- Dwarf Idle：<https://www.mixamo.com/#/?page=1&query=Dwarf+Idle>
+
 ### LUTs
 
 - skinAngleScattering：<https://zhuanlan.zhihu.com/p/509057464>
