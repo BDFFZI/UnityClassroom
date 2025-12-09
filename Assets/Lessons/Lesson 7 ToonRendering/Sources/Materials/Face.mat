@@ -27,6 +27,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 76a34609fc2ec884a8ef9a4d5dbf8085, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _AnisotropyMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissiveMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -57,10 +61,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlbedoDisturbance: 0
+    - _IsHair: 0
     - _Metallic: 0
     - _OutlineWidth: 0.002
     - _Roughness: 0.05
     - _Smoothness: 0
+    - _SpecularDisturbance: 1
+    - _SpecularOffset: 0
+    - _SpecularToon: 0
     - _TonnShadowShift: -0.223
     - _TonnShadowShift2: -0.054
     - _ToonIntensity: 0.7
@@ -71,7 +80,8 @@ Material:
     - _ToonSpecularShift: 0.4
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ToonShadow: {r: 0.9547169, g: 0.5262141, b: 0.46655032, a: 0.60784316}
     - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

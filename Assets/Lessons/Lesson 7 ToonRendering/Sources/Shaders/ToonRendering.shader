@@ -22,6 +22,13 @@ Shader "Hidden/ToonRendering"
 		_ToonShadowShift2("ToonShadowShift2",Range(-1,1)) = 0
 		_OutlineWidth("OutlineWidth",Range(0,0.01)) = 0
 		_OutlineColor("OutlineColor",Color) = (0,0,0,1)
+
+		[Toggle]_IsHair("IsHair",Float) = 0
+		_AnisotropyMap("AnisotropyMap",2D) = "white"{}
+		_SpecularDisturbance("SpecularDisturbance",Range(0,2)) = 1
+		_SpecularOffset("SpecularOffset",Float) = 0
+		_SpecularColor("SpecularColor",Color) = (1,1,1,1)
+		_SpecularToon("SpecularToon",Range(0,1)) = 0
 	}
 	SubShader
 	{
@@ -42,6 +49,7 @@ Shader "Hidden/ToonRendering"
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
 			#pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+			#pragma shader_feature_local _ _ISHAIR_ON
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -83,6 +91,13 @@ Shader "Hidden/ToonRendering"
 			float4 _ToonShadow2;
 			float _ToonShadowShift2;
 
+			sampler2D _AnisotropyMap;
+			float4 _AnisotropyMap_ST;
+			float _SpecularDisturbance;
+			float _SpecularOffset;
+			float4 _SpecularColor;
+			float _SpecularToon;
+
 			Fragment VertexPass(Vertex v)
 			{
 				Fragment fragment;
@@ -105,10 +120,12 @@ Shader "Hidden/ToonRendering"
 				));
 
 				//物体表面属性
+				float anisotropy = tex2D(_AnisotropyMap, fragment.uv * _AnisotropyMap_ST.xy).r;
 				float3 albedo = _Albedo.rgb * tex2D(_AlbedoMap, fragment.uv).rgb;
 				float metallic = _Metallic * tex2D(_MetallicMap, fragment.uv).r;
 				float smoothness = _Smoothness * tex2D(_SmoothnessMap, fragment.uv).r;
 				float3 normal = mul(tangentToWorld, UnpackNormal(tex2D(_NormalMap, fragment.uv)));
+				float3 bitangent = tangentToWorld._m01_m11_m21;
 				float occlusion = tex2D(_OcclusionMap, fragment.uv).r;
 				float3 emissive = tex2D(_EmissiveMap, fragment.uv).rgb;
 				float3 positionWS = fragment.positionWS;
@@ -157,10 +174,20 @@ Shader "Hidden/ToonRendering"
 						//镜射光
 						float3 specularIrradiance = light.color * light.distanceAttenuation * light.shadowAttenuation;
 						float3 specularRadiance = specularIrradiance * saturate(dot(normal, light.direction));
+						#ifdef _ISHAIR_ON
+						float disturbance = (anisotropy - 0.5) * _SpecularDisturbance + _SpecularOffset;
+						float3 disturbanceBitangent = normalize(bitangent + normal * disturbance);
+						float blinnCardinal = saturate(sqrt(1 - pow(dot(disturbanceBitangent, h), 2)));
+						float blinn1 = pow(blinnCardinal, max(2 / roughness2 - 2, 0.0001));
+						float blinn = tex2D(_Toonmapping, float2(1 - blinn1, _SpecularToon)).r * (1 / roughness2);
+						float3 realSpecular = lerp(specular, _SpecularColor.rgb, _SpecularColor.a);
+						#else
 						float blinn = pow(saturate(dot(h, normal)), max(2 / roughness2 - 2, 0.0001)) * (1 / roughness2);
+						float3 realSpecular = specular;
+						#endif
 						float geometryOcclusion = pow(saturate(dot(normal, l) * dot(normal, v)), 0.2) / lerp(roughness, 1, pow(saturate(dot(l, h)), 2));
 						float specularTerm = blinn * geometryOcclusion / 3; //PBR：法线分布、几何遮蔽、归一化
-						float specularColor = specular * specularTerm * specularRadiance;
+						float3 specularColor = realSpecular * specularTerm * specularRadiance;
 
 						//累加直接光照结果
 						finalColor += diffuseColor + specularColor;
@@ -196,8 +223,6 @@ Shader "Hidden/ToonRendering"
 			}
 
 			Cull Front
-			//			ZWrite Off
-			//			Blend SrcAlpha OneMinusSrcAlpha
 
 			HLSLPROGRAM
 			#pragma vertex VertexPass

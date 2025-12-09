@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: d5aa0f0e727c1664fa82e6e64915ce32, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _ISHAIR_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,7 +20,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _SpecularColor
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -27,12 +28,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7f298bbd7ba13544d968263d87bf7ab2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _AnisotropyMap:
+        m_Texture: {fileID: 8600000, guid: c5b026075d6a21a41be3a08b1a296f89, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissiveMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
-        m_Texture: {fileID: 2800000, guid: 603ee1bea7ee7e64a8ab30b8bc937233, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -48,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
-        m_Texture: {fileID: 2800000, guid: 603ee1bea7ee7e64a8ab30b8bc937233, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Toonmapping:
@@ -57,10 +62,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0
+    - _AlbedoDisturbance: 0
+    - _IsHair: 1
+    - _Metallic: 0.3
     - _OutlineWidth: 0.002
     - _Roughness: 0.05
-    - _Smoothness: 1
+    - _Smoothness: 0.6
+    - _SpecularDisturbance: 1.2
+    - _SpecularOffset: -0.2
+    - _SpecularToon: 0.5
     - _TonnShadowShift: -0.223
     - _TonnShadowShift2: -0.054
     - _ToonIntensity: 0.95
@@ -71,7 +81,8 @@ Material:
     - _ToonSpecularShift: 0.4
     m_Colors:
     - _Albedo: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
+    - _SpecularColor: {r: 0.16981131, g: 0.11050272, b: 0.064880736, a: 0.87058824}
     - _ToonShadow: {r: 0, g: 0, b: 0, a: 0.60784316}
     - _ToonShadow2: {r: 0, g: 0, b: 0, a: 0.5058824}
   m_BuildTextureStacks: []
