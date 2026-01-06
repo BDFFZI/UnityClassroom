@@ -13,9 +13,7 @@ Shader "Hidden/ObjectToClip"
 			HLSLPROGRAM
 			#pragma vertex VertexPass
 			#pragma fragment FragmentPass
-
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
+			
 			struct Vertex
 			{
 				float3 positionOS : POSITION;
